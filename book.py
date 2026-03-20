@@ -54,6 +54,23 @@ async def real_all_books():
     return BOOKS
 
 
+@app.get('/books/{book_id}')
+async def read_book(book_id: int):
+    for book in BOOKS:
+        if book.id == book_id:
+            return book
+
+
+@app.get('/books/')
+async def book_rating(book_rating:  int):
+    get_book = []
+
+    for book in BOOKS:
+        if book.rating == book_rating:
+            get_book.append(book)
+
+    return get_book
+
 @app.post('/create-book')
 async def create_book(book_request: BookRequest):
     new_book = Book(**book_request.model_dump())
@@ -62,6 +79,21 @@ async def create_book(book_request: BookRequest):
     return BOOKS
 
 
+@app.put('/books/update_book')
+async def update_book(book: BookRequest):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].id == book.id:
+            BOOKS[i] = book
+
+
 def find_book_id(book: Book):
     book.id = 1 if len(BOOKS) == 0 else BOOKS[-1].id + 1
     return book
+
+@app.delete('/books/{book_id}')
+async def delete_book(book_id: int):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].id == book_id:
+            BOOKS.pop(i)
+
+
